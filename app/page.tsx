@@ -3,7 +3,6 @@
 import WebApp from '@twa-dev/sdk'
 import { useEffect, useState } from 'react'
 import axios from 'axios'
-
 // Define the interface for user data
 interface UserData {
   id: number;

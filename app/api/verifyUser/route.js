@@ -13,7 +13,7 @@ export async function POST(request) {
     console.log('BOT_TOKEN:', BOT_TOKEN); // Log the bot token to verify it is correctly loaded
 
     const secretKey = crypto.createHmac("sha256", "WebAppData").update(BOT_TOKEN).digest();
-    console.log('Secret key', secretKey);
+    console.log('Secret key', secretKey.toString('hex'));
 
     const parsedData = new URLSearchParams(initData);
     const hash = parsedData.get('hash');
@@ -22,23 +22,19 @@ export async function POST(request) {
     // Log parsed data for debugging
     console.log('Parsed Data:', Object.fromEntries(parsedData));
 
-    // Remove 'hash' value & Sort alphabetically
-	const data_keys = Object.keys(parsedData).filter(v => v !== 'hash').sort()
-    console.log('Data keys 1:', data_keys);
+    /// Remove 'hash' value & sort keys alphabetically
+    const dataKeys = Array.from(parsedData.keys()).filter(v => v !== 'hash').sort();
 
-	// Create line format key=<value>
-	const items = data_keys.map(key => key + '=' + parsedData[key])
-    console.log('Data keys 11:', items);
+    // Create line format key=<value>
+    const items = dataKeys.map(key => `${key}=${parsedData.get(key)}`);
 
-	// Create check string with a line feed
-	// character ('\n', 0x0A) used as separator
-	// result: 'auth_date=<auth_date>\nquery_id=<query_id>\nuser=<user>'
-	const data_check_string = items.join('\n')
-    console.log('Data keys 111:', data_check_string);
+    // Create check string with a line feed character ('\n') used as separator
+    const dataCheckString = items.join('\n');
+    console.log('Data keys 111:', dataCheckString);
 
-    console.log('Data String for HMAC:', data_check_string);
+    console.log('Data String for HMAC:', dataCheckString);
 
-    const hmac = crypto.createHmac('sha256', secretKey).update(data_check_string).digest('hex');
+    const hmac = crypto.createHmac('sha256', secretKey).update(dataCheckString).digest('hex');
     console.log('Calculated HMAC:', hmac);
     console.log('Provided Hash:', hash);
 
