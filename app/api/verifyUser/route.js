@@ -17,22 +17,28 @@ export async function POST(request) {
 
     const parsedData = new URLSearchParams(initData);
     const hash = parsedData.get('hash');
-    parsedData.delete('hash');
+    // parsedData.delete('hash');
 
     // Log parsed data for debugging
     console.log('Parsed Data:', Object.fromEntries(parsedData));
 
-    // 2. Building the verification string.
-    const dataString = Object.keys(parsedData)
-      .sort()
-      .map((key) => `${key}=${data[key]}`)
-      .join("\n");
+    // Remove 'hash' value & Sort alphabetically
+	const data_keys = Object.keys(parsedData).filter(v => v !== 'hash').sort()
+    console.log('Data keys 1:', data_keys);
 
-    console.log("dataCheckString", dataString);
+	// Create line format key=<value>
+	const items = data_keys.map(key => key + '=' + parsedData[key])
+    console.log('Data keys 11:', items);
 
-    console.log('Data String for HMAC:', dataString);
+	// Create check string with a line feed
+	// character ('\n', 0x0A) used as separator
+	// result: 'auth_date=<auth_date>\nquery_id=<query_id>\nuser=<user>'
+	const data_check_string = items.join('\n')
+    console.log('Data keys 111:', data_check_string);
 
-    const hmac = crypto.createHmac('sha256', secretKey).update(dataString).digest('hex');
+    console.log('Data String for HMAC:', data_check_string);
+
+    const hmac = crypto.createHmac('sha256', secretKey).update(data_check_string).digest('hex');
     console.log('Calculated HMAC:', hmac);
     console.log('Provided Hash:', hash);
 
