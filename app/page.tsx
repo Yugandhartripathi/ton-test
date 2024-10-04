@@ -34,7 +34,11 @@ export default function Home() {
       setIsVerified(response.data.verified)
     } catch (error) {
       console.error('Verification failed:', error)
-      setVerificationError(error.message || 'Unknown error')
+      if (error instanceof Error) {
+        setVerificationError(error.message)
+      } else {
+        setVerificationError('Unknown error')
+      }
       setIsVerified(false)
     }
   }
