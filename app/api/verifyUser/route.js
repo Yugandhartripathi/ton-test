@@ -25,7 +25,7 @@ export async function POST(request) {
     const dataString = Array.from(parsedData.entries())
       .sort((a, b) => a[0].localeCompare(b[0]))
       .map(([key, value]) => `${key}=${value}`)
-      .join('\n');
+      .join('&');
 
     console.log('Data String for HMAC:', dataString);
 
