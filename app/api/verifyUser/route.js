@@ -12,7 +12,7 @@ export async function POST(request) {
     const BOT_TOKEN = process.env.BOT_TOKEN; // Ensure BOT_TOKEN is correct
     console.log('BOT_TOKEN:', BOT_TOKEN); // Log the bot token to verify it is correctly loaded
 
-    const secretKey = crypto.createHash('sha256').update(BOT_TOKEN).digest();
+    const secretKey = crypto.createHmac("sha256", "WebAppData").update(BOT_TOKEN).digest();
     console.log('Secret key', secretKey);
 
     const parsedData = new URLSearchParams(initData);
@@ -22,11 +22,13 @@ export async function POST(request) {
     // Log parsed data for debugging
     console.log('Parsed Data:', Object.fromEntries(parsedData));
 
-    // Create a data string by sorting keys alphabetically
-    const dataString = Array.from(parsedData.entries())
-      .sort((a, b) => a[0].localeCompare(b[0]))
-      .map(([key, value]) => `${key}=${value}`)
-      .join('&');
+    // 2. Building the verification string.
+    const dataString = Object.keys(parsedData)
+      .sort()
+      .map((key) => `${key}=${data[key]}`)
+      .join("\n");
+
+    console.log("dataCheckString", dataString);
 
     console.log('Data String for HMAC:', dataString);
 
