@@ -28,20 +28,23 @@ export default function Home() {
 
   const verifyUser = async (initData: string) => {
     try {
-      console.log('Verifying user with initData:', initData)
-      const response = await axios.post('/api/verifyUser', { initData })
-      console.log('Verification response:', response.data)
-      setIsVerified(response.data.verified)
+      console.log('Verifying user with initData:', initData);
+      const response = await axios.get('/api/verifyUser', {
+        params: { initData },
+      });
+      console.log('Verification response:', response.data);
+      setIsVerified(response.data.verified);
     } catch (error) {
-      console.error('Verification failed:', error)
+      console.error('Verification failed:', error);
       if (error instanceof Error) {
-        setVerificationError(error.message)
+        setVerificationError(error.message);
       } else {
-        setVerificationError('Unknown error')
+        setVerificationError('Unknown error');
       }
-      setIsVerified(false)
+      setIsVerified(false);
     }
-  }
+  };
+  
 
   return (
     <main className="p-4">
