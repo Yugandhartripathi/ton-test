@@ -12,15 +12,28 @@ interface UserData {
   language_code: string;
   is_premium?: boolean;
 }
-// 7960033776:AAFKDCIWnYHL9xMjZHvY4ARwSvUaX45PFG4
+
 export default function Home() {
+
   const [userData, setUserData] = useState<UserData | null>(null)
+  const [isVerified, setIsVerified] = useState<boolean | null>(null)
 
   useEffect(() => {
     if (WebApp.initDataUnsafe.user) {
       setUserData(WebApp.initDataUnsafe.user as UserData)
+      verifyUser(WebApp.initData)
     }
   }, [])
+
+  const verifyUser = async (initData: string) => {
+    try {
+      const response = await axios.post('/api/verifyUser', { initData })
+      setIsVerified(response.data.verified)
+    } catch (error) {
+      console.error('Verification failed:', error)
+      setIsVerified(false)
+    }
+  }
 
   return (
     <main className="p-4">
@@ -34,6 +47,7 @@ export default function Home() {
             <li>Username: {userData.username || 'N/A'}</li>
             <li>Language Code: {userData.language_code}</li>
             <li>Is Premium: {userData.is_premium ? 'Yes' : 'No'}</li>
+            <li>Verified User: {isVerified === null ? 'Loading...' : isVerified ? 'Yes' : 'No'}</li>
           </ul>
         </>
       ) : (
