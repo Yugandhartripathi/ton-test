@@ -1,6 +1,7 @@
 'use client'
 
 import WebApp from '@twa-dev/sdk'
+import axios from 'axios';
 import { useEffect, useState } from 'react'
 
 // Define the interface for user data
