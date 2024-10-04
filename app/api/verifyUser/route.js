@@ -13,6 +13,7 @@ export async function POST(request) {
     console.log('BOT_TOKEN:', BOT_TOKEN); // Log the bot token to verify it is correctly loaded
 
     const secretKey = crypto.createHash('sha256').update(BOT_TOKEN).digest();
+    console.log('Secret key', secretKey);
 
     const parsedData = new URLSearchParams(initData);
     const hash = parsedData.get('hash');
