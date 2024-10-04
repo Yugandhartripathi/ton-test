@@ -1,8 +1,8 @@
 'use client'
 
 import WebApp from '@twa-dev/sdk'
-import axios from 'axios';
 import { useEffect, useState } from 'react'
+import axios from 'axios'
 
 // Define the interface for user data
 interface UserData {
@@ -15,9 +15,9 @@ interface UserData {
 }
 
 export default function Home() {
-
   const [userData, setUserData] = useState<UserData | null>(null)
   const [isVerified, setIsVerified] = useState<boolean | null>(null)
+  const [verificationError, setVerificationError] = useState<string | null>(null)
 
   useEffect(() => {
     if (WebApp.initDataUnsafe.user) {
@@ -28,10 +28,13 @@ export default function Home() {
 
   const verifyUser = async (initData: string) => {
     try {
+      console.log('Verifying user with initData:', initData)
       const response = await axios.post('/api/verifyUser', { initData })
+      console.log('Verification response:', response.data)
       setIsVerified(response.data.verified)
     } catch (error) {
       console.error('Verification failed:', error)
+      setVerificationError(error.message || 'Unknown error')
       setIsVerified(false)
     }
   }
@@ -49,6 +52,7 @@ export default function Home() {
             <li>Language Code: {userData.language_code}</li>
             <li>Is Premium: {userData.is_premium ? 'Yes' : 'No'}</li>
             <li>Verified User: {isVerified === null ? 'Loading...' : isVerified ? 'Yes' : 'No'}</li>
+            {verificationError && <li>Verification Error: {verificationError}</li>}
           </ul>
         </>
       ) : (

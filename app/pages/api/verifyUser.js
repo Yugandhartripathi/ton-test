@@ -7,8 +7,8 @@ export default async function handler(req, res) {
     return res.status(400).json({ error: 'Missing initData' });
   }
 
-  const BOT_TOKEN = process.env.BOT_TOKEN; // Set your bot token here or in the environment variables
-  const secretKey = crypto.createHash('sha256').update(BOT_TOKEN).digest();
+  // const BOT_TOKEN = process.env.BOT_TOKEN; // Set your bot token here or in the environment variables
+  const secretKey = crypto.createHash('sha256').update("7960033776:AAFKDCIWnYHL9xMjZHvY4ARwSvUaX45PFG4").digest();
   console.log(secretKey)
 
   const parsedData = new URLSearchParams(initData);
