@@ -25,6 +25,7 @@ export default function Home() {
       verifyUser(WebApp.initData)
     }
   }, [])
+  
 
   const verifyUser = async (initData: string) => {
     try {
